@@ -67,4 +67,51 @@ class FunkinSprite extends animate.FlxAnimate {
 
 		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
 	}
+
+	override function drawAnimate(camera:FlxCamera):Void {
+		var mat = _matrix;
+		mat.identity();
+
+		@:privateAccess
+		var bounds = timeline._bounds;
+		mat.translate(-bounds.x, -bounds.y);
+
+		if (checkFlipX()) {
+			mat.scale(-1, 1);
+			mat.translate(frame.sourceSize.x, 0);
+		}
+
+		if (checkFlipY()) {
+			mat.scale(1, -1);
+			mat.translate(0, frame.sourceSize.y);
+		}
+
+		if (applyStageMatrix)
+			mat.concat(library.matrix);
+
+		mat.translate(-origin.x, -origin.y);
+		mat.translate(-frameOffset.x, -frameOffset.y);
+		mat.scale(scale.x, scale.y);
+
+		if (angle != 0) {
+			updateTrig();
+			mat.rotateWithTrig(_cosAngle, _sinAngle);
+		}
+
+		if (skew.x != 0 || skew.y != 0) {
+			updateSkew();
+			@:privateAccess mat.concat(animate.FlxAnimate._skewMatrix);
+		}
+
+		getScreenPosition(_point, camera);
+		_point.x += origin.x - offset.x;
+		_point.y += origin.y - offset.y;
+		mat.translate(_point.x, _point.y);
+
+		if (renderStage)
+			drawStage(camera);
+
+		timeline.currentFrame = animation.frameIndex;
+		timeline.draw(camera, mat, colorTransform, blend, antialiasing, shader);
+	}
 }

@@ -6,6 +6,11 @@ class CharIcon extends FunkinSprite {
 	public var name:String;
 	public var player(default, set):Bool;
 
+	// how mqny icons are in the image
+	// by default 2 icons
+	// (can only be in a row
+	public var count:Int = 2;
+
 	var iconOffsets:Array<Float> = [0, 0];
 
 	public function new(name:String, ?player:Bool = false) {
@@ -19,7 +24,7 @@ class CharIcon extends FunkinSprite {
 		var graphic:FlxGraphic = Paths.image('icons/$value');
 		var size:Float = Math.round(graphic.width / graphic.height);
 
-		loadGraphic(graphic, true, 150, 150);
+		loadGraphic(graphic, true, graphic.width / count, graphic.height);
 		animation.add(value, [for (i in 0...frames.frames.length) i], 0, false);
 		animation.play(value);
 
