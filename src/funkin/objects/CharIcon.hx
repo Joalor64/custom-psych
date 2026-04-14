@@ -24,7 +24,7 @@ class CharIcon extends FunkinSprite {
 		var graphic:FlxGraphic = Paths.image('icons/$value');
 		var size:Float = Math.round(graphic.width / graphic.height);
 
-		loadGraphic(graphic, true, Std.int(graphic.width) / count, graphic.height);
+		loadGraphic(graphic, true, Std.int(graphic.width / count), graphic.height);
 		animation.add(value, [for (i in 0...frames.frames.length) i], 0, false);
 		animation.play(value);
 
